@@ -72,6 +72,9 @@ const keys = {
     }
 }
 
+//win scenario
+let scrollOffset = 0
+
 animate = () =>{
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
@@ -90,11 +93,14 @@ animate = () =>{
         player.velocity.x = 0
 
         if(keys.right.pressed){
+            scrollOffset += 5
+            console.log(scrollOffset)
             platforms.forEach(platform => {
                 platform.position.x -= 5
             })
         }
         else if(keys.left.pressed){
+            scrollOffset -= 5
             platforms.forEach(platform => {
                 platform.position.x += 5
             })
@@ -106,12 +112,15 @@ animate = () =>{
             player.velocity.y = 0
     }
     })
+
+    if(scrollOffset > 3713){
+        console.log("You Win")
+    }
 }
 
 animate()
 
 addEventListener('keydown', ({keyCode}) => {
-    console.log(keyCode)
 
     switch(keyCode){
         case 68 :
@@ -134,7 +143,6 @@ addEventListener('keydown', ({keyCode}) => {
 })
 
 addEventListener('keyup', ({keyCode}) => {
-    console.log(keyCode)
 
     switch(keyCode){
         case 68 :
