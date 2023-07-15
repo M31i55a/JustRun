@@ -93,9 +93,10 @@ class Player{
         if(this.position.y + this.height + this.velocity.y <= canvas.height){
             this.velocity.y += gravity
         }
-        else{
-            this.velocity.y = 0
-        }
+        //Here, I deleted the instruction to create a hole(gravity is not active)
+        // else{
+        //     this.velocity.y = 0
+        // }
         
     }
 }
@@ -138,25 +139,50 @@ class GenericObject{
 
 //Create game Elements *************************************************************************************************
 
-const player = new Player()
+let player = new Player()
+    
+    let platform = new Image();
+    let hills = new Image();
+    let background = new Image();
+    
+    platform.src = './images/platform.png'
+    hills.src = './images/hills.png'
+    background.src = './images/background.png'
+    
+    let platforms = [
+        new Platform({x: -1, y: 580, image:platform}), 
+        new Platform({x: platform.width - 2, y: 580, image:platform}),
+        new Platform({x: platform.width * 2 + 137, y: 580, image:platform}),
+    ]
+    
+    let genericObjects = [
+        new GenericObject({x: -1, y: -1, image: background}),
+        new GenericObject({x: -1, y: -1, image: hills}),
+    ]
 
-const platform = new Image();
-const hills = new Image();
-const background = new Image();
+let init = () =>{
+    player = new Player()
+    
+    platform = new Image();
+    hills = new Image();
+    background = new Image();
+    
+    platform.src = './images/platform.png'
+    hills.src = './images/hills.png'
+    background.src = './images/background.png'
+    
+    platforms = [
+        new Platform({x: -1, y: 580, image:platform}), 
+        new Platform({x: platform.width - 2, y: 580, image:platform}),
+        new Platform({x: platform.width * 2 + 137, y: 580, image:platform}),
+    ]
+    
+    genericObjects = [
+        new GenericObject({x: -1, y: -1, image: background}),
+        new GenericObject({x: -1, y: -1, image: hills}),
+    ]
+}
 
-platform.src = './images/platform.png'
-hills.src = './images/hills.png'
-background.src = './images/background.png'
-
-const platforms = [
-    new Platform({x: -1, y: 580, image:platform}), 
-    new Platform({x: platform.width - 2, y: 580, image:platform})
-]
-
-const genericObjects = [
-    new GenericObject({x: -1, y: -1, image: background}),
-    new GenericObject({x: -1, y: -1, image: hills}),
-]
 
 //animate function ***********************************************************************************************
 animate = () =>{
@@ -205,7 +231,7 @@ animate = () =>{
     }
     
     platforms.forEach(platform => {
-        if(player.position.y + player.height <= platform.position.y && player.position.y + player.  height + player.velocity.y >= platform.position.y && player.position.x + player.width >=  platform.position.x && player.position.x <= platform.position.x + platform.width){
+        if(player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >=  platform.position.x && player.position.x <= platform.position.x + platform.width){
             player.velocity.y = 0
         }
     })
@@ -213,6 +239,11 @@ animate = () =>{
     //win scenario
     if(scrollOffset > 3713){
         console.log("You Win")
+    }
+
+    //lose condition
+    if(player.position.y > canvas.height){
+        init();
     }
 }
 
