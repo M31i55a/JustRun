@@ -117,6 +117,23 @@ class Platform{
     }
 }
 
+class GenericObject{
+    constructor({x, y, image}){
+        this.position = {
+            x,
+            y
+        }
+
+        this.width = image.width;
+        this.height = image.height;
+        this.image = image;
+    }
+
+    draw(){
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+    }
+}
+
 
 
 //Create game Elements *************************************************************************************************
@@ -124,18 +141,37 @@ class Platform{
 const player = new Player()
 
 const platform = new Image();
-platform.src = './images/platform.png'
+const hills = new Image();
+const background = new Image();
 
-const platforms = [new Platform({x: 0, y: 600, image:platform}), new Platform({x: platform.width - 2, y: 600, image:platform})]
+platform.src = './images/platform.png'
+hills.src = './images/hills.png'
+background.src = './images/background.png'
+
+const platforms = [
+    new Platform({x: -1, y: 580, image:platform}), 
+    new Platform({x: platform.width - 2, y: 580, image:platform})
+]
+
+const genericObjects = [
+    new GenericObject({x: -1, y: -1, image: background}),
+    new GenericObject({x: -1, y: -1, image: hills}),
+]
 
 //animate function ***********************************************************************************************
 animate = () =>{
     requestAnimationFrame(animate)
     c.fillStyle = 'white'
     c.fillRect(0, 0, canvas.width, canvas.height)
+    //background
+    genericObjects.forEach(genericObject => {
+        genericObject.draw()
+    })
+    //platform
     platforms.forEach(platform => {
         platform.draw()
     })
+
     player.update()
 
     if(keys.right.pressed && player.position.x < 400){
@@ -153,11 +189,17 @@ animate = () =>{
             platforms.forEach(platform => {
                 platform.position.x -= 5
             })
+            genericObjects.forEach(genericObject => {
+                genericObject.position.x -= 3
+            })
         }
         else if(keys.left.pressed){
             scrollOffset -= 5
             platforms.forEach(platform => {
                 platform.position.x += 5
+            })
+            genericObjects.forEach(genericObject => {
+                genericObject.position.x += 3
             })
         }
     }
@@ -165,7 +207,7 @@ animate = () =>{
     platforms.forEach(platform => {
         if(player.position.y + player.height <= platform.position.y && player.position.y + player.  height + player.velocity.y >= platform.position.y && player.position.x + player.width >=  platform.position.x && player.position.x <= platform.position.x + platform.width){
             player.velocity.y = 0
-    }
+        }
     })
 
     //win scenario
