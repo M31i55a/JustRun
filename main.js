@@ -1,12 +1,59 @@
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = window.innerHeight -3.1;
 
+//Global variable *********************************************************************************************
 const gravity = 0.5
 
-//Create Classes
+//keyboard events **************************************************************************************************
+addEventListener('keydown', ({keyCode}) => {
+
+    switch(keyCode){
+        case 68 :
+            keys.right.pressed = true
+            break
+        
+        case 81 :
+            keys.left.pressed = true
+            break
+        
+        case 83 :
+            player.position.y += 2
+            break
+        
+        case 90 :
+            player.velocity.y -= 10
+            break
+        
+    }
+})
+
+addEventListener('keyup', ({keyCode}) => {
+
+    switch(keyCode){
+        case 68 :
+            keys.right.pressed = false
+            break
+        
+        case 81 :
+            keys.left.pressed = false
+            break
+        
+        case 83 :
+            player.position.y += 7
+            break
+        
+        case 90 :
+            player.velocity.y -= 2
+            break
+        
+    }
+})
+
+//Create Classes ***********************************************************************************************
 class Player{
     constructor(){
         this.position = {
@@ -42,26 +89,32 @@ class Player{
 }
 
 class Platform{
-    constructor({x, y}){
+    constructor({x, y, image}){
         this.position = {
             x,
             y
         }
 
-        this.width = 200
-        this.height = 20
+        this.width = 200;
+        this.height = 20;
+        this.image = image;
     }
 
     draw(){
-        c.fillStyle = 'blue'
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
     }
 }
 
-//Create Elements
+
+
+//Create Elements *************************************************************************************************
+
 const player = new Player()
 
-const platforms = [new Platform({x: 200, y: 300}), new Platform({x: 500, y: 400})]
+const platform = new Image();
+platform.src = './images/platform.png'
+
+const platforms = [new Platform({x: 200, y: 600, image:platform}), new Platform({x: 500, y: 400, image:platform})]
 
 const keys = {
     right : {
@@ -72,9 +125,10 @@ const keys = {
     }
 }
 
-//win scenario
+
 let scrollOffset = 0
 
+//animate function ***********************************************************************************************
 animate = () =>{
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
@@ -113,53 +167,10 @@ animate = () =>{
     }
     })
 
+    //win scenario
     if(scrollOffset > 3713){
         console.log("You Win")
     }
 }
 
 animate()
-
-addEventListener('keydown', ({keyCode}) => {
-
-    switch(keyCode){
-        case 68 :
-            keys.right.pressed = true
-            break
-        
-        case 81 :
-            keys.left.pressed = true
-            break
-        
-        case 83 :
-            player.position.y += 2
-            break
-        
-        case 90 :
-            player.velocity.y -= 17
-            break
-        
-    }
-})
-
-addEventListener('keyup', ({keyCode}) => {
-
-    switch(keyCode){
-        case 68 :
-            keys.right.pressed = false
-            break
-        
-        case 81 :
-            keys.left.pressed = false
-            break
-        
-        case 83 :
-            player.position.y += 7
-            break
-        
-        case 90 :
-            player.velocity.y -= 2
-            break
-        
-    }
-})
