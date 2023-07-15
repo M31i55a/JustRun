@@ -1,14 +1,26 @@
 
+//Canvas setup ***************************************************************************************************************
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight -3.1;
+//we make a 16/9 aspect ratio
+canvas.width = 1024;
+canvas.height = 700;
 
-//Global variable *********************************************************************************************
-const gravity = 0.5
+//Global variables & functions *********************************************************************************************
+const gravity = 0.6
+let scrollOffset = 0
 
 //keyboard events **************************************************************************************************
+const keys = {
+    right : {
+        pressed : false
+    },
+    left : {
+        pressed : false
+    }
+}
+
 addEventListener('keydown', ({keyCode}) => {
 
     switch(keyCode){
@@ -95,8 +107,8 @@ class Platform{
             y
         }
 
-        this.width = 200;
-        this.height = 20;
+        this.width = image.width;
+        this.height = image.height;
         this.image = image;
     }
 
@@ -107,35 +119,24 @@ class Platform{
 
 
 
-//Create Elements *************************************************************************************************
+//Create game Elements *************************************************************************************************
 
 const player = new Player()
 
 const platform = new Image();
 platform.src = './images/platform.png'
 
-const platforms = [new Platform({x: 200, y: 600, image:platform}), new Platform({x: 500, y: 400, image:platform})]
-
-const keys = {
-    right : {
-        pressed : false
-    },
-    left : {
-        pressed : false
-    }
-}
-
-
-let scrollOffset = 0
+const platforms = [new Platform({x: 0, y: 600, image:platform}), new Platform({x: platform.width - 2, y: 600, image:platform})]
 
 //animate function ***********************************************************************************************
 animate = () =>{
     requestAnimationFrame(animate)
-    c.clearRect(0, 0, canvas.width, canvas.height)
-    player.update()
+    c.fillStyle = 'white'
+    c.fillRect(0, 0, canvas.width, canvas.height)
     platforms.forEach(platform => {
         platform.draw()
     })
+    player.update()
 
     if(keys.right.pressed && player.position.x < 400){
         player.velocity.x = 5
